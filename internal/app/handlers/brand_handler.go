@@ -53,6 +53,26 @@ func (h *BrandHandler) FindAll(c *gin.Context) {
 	utils.JSON(c.Writer, http.StatusOK, utils.Response{Data: response})
 }
 
+func (h *BrandHandler) UpdateById(c *gin.Context) {
+	brandId := c.Param("id")
+	var dto dtos.UpdateBrandDto
+	err := c.BindJSON(&dto)
+	if err != nil {
+		msg := fmt.Sprintf("Erro ao ler o corpo da requisição: %v", err)
+		utils.JSON(c.Writer, http.StatusBadRequest, utils.Response{Error: msg})
+		return
+	}
+
+	response, err := h.service.UpdateById(brandId, &dto)
+	if err != nil {
+		msg := fmt.Sprintf("Erro ao atualizar a marca com ID %s: %v", brandId, err)
+		utils.JSON(c.Writer, http.StatusBadRequest, utils.Response{Error: msg})
+		return
+	}
+
+	utils.JSON(c.Writer, http.StatusOK, utils.Response{Data: response})
+}
+
 func (h *BrandHandler) DeleteById(c *gin.Context) {
 	brandId := c.Param("id")
 	if brandId == "" {

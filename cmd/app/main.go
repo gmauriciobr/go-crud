@@ -32,11 +32,13 @@ func main() {
 	router.POST("/brand", brandHandler.CreateBrand)
 	router.GET("/brand", brandHandler.FindAll)
 	router.GET("/brand/:id", brandHandler.FindById)
+	router.PUT("/brand/:id", brandHandler.UpdateById)
 	router.DELETE("/brand/:id", brandHandler.DeleteById)
 
 	router.POST("/model", modelHandler.CreateModel)
 	router.GET("model", modelHandler.FindAll)
 	router.GET("/model/:id", modelHandler.FindById)
+	router.PUT("/model/:id", modelHandler.UpdateById)
 	router.DELETE("/model/:id", modelHandler.DeleteById)
 
 	router.Run(":3000")

@@ -44,6 +44,21 @@ func (h *ModelHandler) FindById(c *gin.Context) {
 	utils.JSON(c.Writer, http.StatusOK, utils.Response{Data: result})
 }
 
+func (h *ModelHandler) UpdateById(c *gin.Context) {
+	id := c.Param("id")
+	var updateModelDto dtos.UpdateModelDto
+	if err := c.ShouldBindJSON(&updateModelDto); err != nil {
+		utils.JSON(c.Writer, http.StatusBadRequest, utils.Response{Error: err.Error()})
+		return
+	}
+	result, err := h.modelService.UpdateById(id, &updateModelDto)
+	if err != nil {
+		utils.JSON(c.Writer, http.StatusNotFound, utils.Response{Error: err.Error()})
+		return
+	}
+	utils.JSON(c.Writer, http.StatusOK, utils.Response{Data: result})
+}
+
 func (h *ModelHandler) DeleteById(c *gin.Context) {
 	id := c.Param("id")
 	err := h.modelService.DeleteById(id)

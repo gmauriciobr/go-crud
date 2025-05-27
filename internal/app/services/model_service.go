@@ -12,6 +12,7 @@ type ModelService interface {
 	Create(dto *dtos.CreateModelDto) (*models.Model, error)
 	FindAll() ([]*models.Model, error)
 	FindById(id string) (*models.Model, error)
+	UpdateById(id string, dto *dtos.UpdateModelDto) (*models.Model, error)
 	DeleteById(id string) error
 }
 
@@ -45,6 +46,22 @@ func (s *ModelServiceImpl) FindAll() ([]*models.Model, error) {
 
 func (s *ModelServiceImpl) FindById(id string) (*models.Model, error) {
 	return s.modelRepository.FindById(id)
+}
+
+func (s *ModelServiceImpl) UpdateById(id string, dto *dtos.UpdateModelDto) (*models.Model, error) {
+	model, err := s.modelRepository.FindById(id)
+	if err != nil {
+		return nil, err
+	}
+
+	brand, _ := s.brandService.FindById(dto.BrandId)
+	return s.modelRepository.Save(model.ID, &models.Model{
+		ID:    model.ID,
+		Brand: *brand,
+		Name:  dto.Name,
+		Year:  dto.Year,
+		Price: dto.Price,
+	})
 }
 
 func (s *ModelServiceImpl) DeleteById(id string) error {

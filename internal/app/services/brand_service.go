@@ -12,6 +12,7 @@ type BrandService interface {
 	Create(d *dtos.CreateBrandDto) (*models.Brand, error)
 	FindById(id string) (*models.Brand, error)
 	FindAll() ([]*models.Brand, error)
+	UpdateById(id string, d *dtos.UpdateBrandDto) (*models.Brand, error)
 	DeleteById(id string) error
 }
 
@@ -40,6 +41,16 @@ func (s *BrandServiceImpl) FindById(id string) (*models.Brand, error) {
 
 func (s *BrandServiceImpl) FindAll() ([]*models.Brand, error) {
 	return s.repository.FindAll()
+}
+
+func (s *BrandServiceImpl) UpdateById(id string, d *dtos.UpdateBrandDto) (*models.Brand, error) {
+	brand, err := s.repository.FindById(id)
+	if err != nil {
+		return nil, err
+	}
+
+	brand.Name = d.Name
+	return s.repository.Save(brand.ID, brand)
 }
 
 func (s *BrandServiceImpl) DeleteById(id string) error {
